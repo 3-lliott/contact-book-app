@@ -1,14 +1,26 @@
 from contact import Contact,ContactList
 
+"""functionality to add
+   1) Errors show immediately after the operation
+   2)-More exception cases: Numbers not less than 11
+    -shouldn't accept more than one of a single name, not more than one number
+    -no letters in numbers, no numbers in letters
+ """ 
+
 def add_contact(contact_list):
     name = input("Enter contact name: ").strip()
-    number = input("Enter contact number: ").strip()
-
     if not name:
-        raise ValueError("Name cannot be empty.")
-
+            raise ValueError("Name cannot be empty.")
+    if any(char.isdigit() for char in name):
+        raise ValueError("Name cannot contain numbers.")
+    if name in (contact.name for contact in contact_list.contacts):
+        raise ValueError("Contact with this name already exists.")
+    
+    number = input("Enter contact number: ").strip()
     if not number:
         raise ValueError("Number cannot be empty.")
+    if not number.isdigit():
+        raise ValueError("Number must contain only digits.")
 
     contact = Contact(name, number)
     contact_list.add_contact(contact)
@@ -26,13 +38,16 @@ def update_contact(contact_list):
     ).strip()
 
     new_name = input("Enter new name: ").strip()
-    new_number = input("Enter new number: ").strip()
-
     if not new_name:
-        raise ValueError("Name cannot be empty.")
-
+            raise ValueError("Name cannot be empty.")
+    if any(char.isdigit() for char in new_name):
+            raise ValueError("Name cannot contain numbers.")
+    
+    new_number = input("Enter new number: ").strip()
     if not new_number:
         raise ValueError("Number cannot be empty.")
+    if not new_number.isdigit():
+        raise ValueError("Number must contain only digits.")
 
     contact_list.update_contact(
         current_name,
@@ -51,6 +66,7 @@ def remove_contact(contact_list):
     contact_list.remove_contact(name)
 
     print("Contact removed successfully.")
+
 
 def main():
     contact_list = ContactList()
@@ -87,6 +103,7 @@ def main():
 
         except ValueError as error:
             print(f"Error: {error}")
+
 
 if __name__ == "__main__":
     main()
